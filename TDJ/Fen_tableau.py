@@ -91,7 +91,7 @@ def fen_tableau():
         tab = []
         for j in range(0 , len(STRATS[i])):
             txt_strat = str(i+1) + ascii_lowercase[j:j+1]
-            txt = Label ( app, text = "Soit \""+ txt_strat +"\" la strategie \"" + STRATS[i][j] + "\" du joueur " + JOUEURS[i])
+            txt = Label ( app, text = "Soit \""+ txt_strat +"\" la strategie \"" + STRATS[i][j] + "\" du joueur \"" + JOUEURS[i] + "\"")
             # ajout d'un padding au texte si la strategie est le 1e ou le dernier de la liste
             if ( j == len(STRATS[i])-1 ):
                 txt.pack(padx=0, pady=(0,20))
@@ -182,7 +182,7 @@ def fen_tableau():
     grid_layout = Frame(app)
     canvas = Canvas(grid_layout)
     scrollbar = Scrollbar(grid_layout, orient="horizontal", command=canvas.xview)
-    tableur = Tableur(canvas, rows=len(STRATS[0]), columns=NB_COLONNE, width=8)
+    tableur = Tableur(canvas, rows=len(STRATS[0]), columns=NB_COLONNE, width=12)
     tableur.bind(
         "<Configure>",
         lambda e: canvas.configure(
