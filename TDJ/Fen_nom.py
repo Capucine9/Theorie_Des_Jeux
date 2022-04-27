@@ -9,8 +9,8 @@ import Changer_page
 
 ## Initialisation des variables
 # Taille de la fenetre
-SIZE = "340x270"
-height = 270
+SIZE = "340x300"
+height = 300
 
 # Liste contenant les noms des joueurs
 list_joueur = []

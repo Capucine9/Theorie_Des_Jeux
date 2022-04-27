@@ -24,7 +24,7 @@ def rajout_strat():
     if nb_strat < nb_strat_max :
         # Agrandissement de la fenetre
         Fen_strat.height +=50
-        TAILLE = "340x" + str(Fen_strat.height)
+        TAILLE = "360x" + str(Fen_strat.height)
         Fen_strat.fenetre_strat.geometry(TAILLE)
 
         # Rajout d'une strategie

@@ -11,8 +11,8 @@ import Recup_valeur
 
 ## Initialisation des variables
 # Taille de la fenetre
-SIZE = "340x290"
-height = 290
+SIZE = "360x320"
+height = 320
 
 # Liste contenant les noms des strategies
 list_strat = []
