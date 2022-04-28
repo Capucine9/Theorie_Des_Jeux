@@ -35,19 +35,6 @@ def newListe(nul, nbJoueurs, strat, inter):
 
 ''' Liste des Fonctions utiles '''
 
-# Converti un tableau 1D en tableau 2D
-def convert(liste, col):
-    i   = 0
-    tab = []
-    aux = []
-    for i in range(len(liste)):
-       aux.append(liste[i])
-       if (i+1)%col == 0:
-          print(aux)
-          tab.append(aux)
-          aux =[]
-    return tab
-
 # Donne un tableau comparant les nbStrats stratégies du joueurs n°numJ
 def GenPosStrat(liste, strat):
     aux = 1
@@ -77,6 +64,16 @@ def GenPosStrat(liste, strat):
         else:
            stratJ[n-1] = stratJ[n-1] + 1
 
+# Obtenir les stratégie
+def getStrat(liste, J, strat):
+    result = []
+    for i in range(len(liste)):
+        if posStrat[i][J-1] == strat:
+            aux = [posStrat[i], liste[i]]
+            result.append(aux)
+    return result
+
+
 # Détermine si le jeu est à somme Nulles
 def somNul(liste):
     for i in liste:
@@ -87,129 +84,79 @@ def somNul(liste):
            return "Ce Jeu n'est pas un jeu à somme nulles"
     return "Ce Jeu est un jeu à somme nulles"
 
-# Détermine les coordonnées dans un tableau 2D à partir de la position dans un tableau 1D
-def coord(dim, pos):
-    ligne = 0
-    col   = 0
-    if dim > pos:
-        return[0, pos]
-
-    aux = pos % dim
-    tmp = pos - aux
-
-    while ligne*dim != tmp:
-        ligne += 1
-
-    col = aux
-
-    return [ligne, col]
-
 # Déterminer les stratégies dominantes
-def domi(liste, dim1, dim2):
-    tab  = convert(liste, dim2)
+def domi(liste, strat):
+    nbJ  = len(strat)
     i    = 0
+    total = []                          # Liste contenant toute les stratégies dominée de chaque joueur
 
-    for
-    jd  = []                            # Liste pour chaque stratégie du joueur1, des stratégies par qui elle est dominé
-    jsd = []                            # Liste pour chaque stratégie du joueur1, des stratégies par qui elle est Strictement dominé
-    jD  = []
-    jsD = []
-  # Parcours des stratégies pour le Joueur 1
-    for i in range(dim1):
-        dom  = []
-        sdom = []
-        for k in range(dim1):
-          # Variable déterminant si la stratégie est dominée ou Strictement dominée (1=oui, 0=indéterminer, -1=non)
-            d   = 0
-            sd  = 0
+    for i in range(nbJ):
+        jd  = []                            # Liste pour chaque stratégie du joueur, des stratégies par qui elle est dominé
+        jsd = []                            # Liste pour chaque stratégie du joueur, des stratégies par qui elle est Strictement dominé
+        jD  = []                            # Liste pour chaque stratégie du joueur, des stratégies qu'elle domine
+        jsD = []                            # Liste pour chaque stratégie du joueur, des stratégies qu'elle domine Strictement
 
-            D   = 0
-            sD  = 0
-            for j in range(dim2):
-                if k != i:
-                   if tab[i][j][0] < tab[k][j][0]:
-                      sD = -1
-                      D  = -1
-                      if sd == 0:
-                          sd = 1
-                      if d == 0:
-                          d = 1
-                   elif tab[i][j][0] > tab[k][j][0]:
-                      sd = -1
-                      d  = -1
-                      if sd == 0:
-                        sd = 1
-                      if d == 0:
-                        d = 1
-                   else:
-                      sd = -1
-                      sD = -1
+        for s1 in range(strat[i]):
+            dom  = []
+            sdom = []
+            Dom  = []
+            sDom = []
+            tmp1 = getStrat(liste, i+1, s1+1)
+            print(s1)
+            for s2 in range(strat[i]):
+                if s1 != s2:
+                     tmp2 = getStrat(liste, i+1, s2+1)
+                   # Variable déterminant si la stratégie est dominée ou Strictement dominée (1=oui, 0=indéterminer, -1=non)
+                     d   = 0
+                     sd  = 0
+                     D   = 0
+                     sD  = 0
 
-           # Attribution pour savoir si la stratégie est dominée ou dominante
-            if sd == 1:
-                sdom.append(k)
-            if d == 1:
-                dom.append(k)
+                     for j in range(strat[i]):
+                        if tmp1[j][1][i] < tmp2[j][1][i]:
+                               D  = -1
+                               sD = -1
+                               if sd == 0:
+                                  sd = 1
+                               if d == 0:
+                                  d = 1
+                        elif tmp1[j][1][i] > tmp2[j][1][i]:
+                            sd = -1
+                            d  = -1
+                            if sD == 0:
+                               sD = 1
+                            if D == 0:
+                               D = 1
+                        else:
+                            sd = -1
+                            sD = -1
 
-        j1d.append(dom)
-        j1sd.append(sdom)
-
-  # Parcours des stratégies pour le Joueur 2
-    for j in range(0, dim2):
-        dom  = []
-        sdom = []
-        for k in range(0, dim2):
-          # Variable déterminant si la stratégie est (Strictement) dominée ou (Strictement) dominante (1=oui, 0=indéterminer, -1=non)
-            d   = 0
-            sd  = 0
-            for i in range(0, dim1):
-                if k != j:
-                   if tab[i][j][1] < tab[i][k][1]:
-                      if sd == 0:
-                         sd = 1
-                      if d == 0:
-                         d = 1
-                   elif tab[i][j][1] > tab[i][k][1]:
-                      sd = -1
-                      d  = -1
-                   else:
-                      sd = -1
-          # Attribution pour savoir si la stratégie est dominée ou dominante
-            if sd == 1:
-                sdom.append(k)
-            if d == 1:
-                dom.append(k)
-
-        j2d.append(dom)
-        j2sd.append(sdom)
-
-    return j1d, j1sd, j2d, j2sd
+                     if sd >= 0:
+                        sdom.append(s2)
+                     if d >= 0:
+                        dom.append(s2)
+                     if sD >= 0:
+                        sDom.append(s2)
+                     if D >= 0:
+                        Dom.append(s2)
+            jd.append(dom)
+            jsd.append(sdom)
+            jD.append(Dom)
+            jsD.append(sDom)
+        aux = [jsd, jd, jsD, jD]
+        total.append(aux)
+    return total
 
 # calcul des équilibres de Nash Purs
-def nashPur(col, nbJ):
+def nashPur(liste, strat):
     eNash  = []                                     # Liste des Équilibres de Nash Purs
     pos    = 0                                      # Index dans la liste des stratégies possible
 
-    # Nombre de possibilité restante d'avoir un Équilibre de Nash Pure
+  # Nombre de possibilité restante d'avoir un Équilibre de Nash Pure
     possib = liste
 
     while len(possib) != 0:
-        aux = liste[coord[0]*dim2+coord[1]]
-        tmp = coord(pos)
-        # parcours des stratégies du joueur 2
-        deb = tmp[0]*dim2
-        fin = (tmp[0]+1)*dim2
-        joueur = 2
-        if joueur == 1:
-           aux = vuJ1
-        elif joueur == 2:
-           aux = vuJ2
-        elif joueur == 3:
-           aux = vuJ3
-        elif joueur == 4:
-           aux = vuJ4
-        elif joueur == 5:
-           aux = vuJ5
+        J   = 0
 
         for j in range(deb, fin):
             if liste[j][1] > liste[pos][1]:
@@ -218,7 +165,7 @@ def nashPur(col, nbJ):
             elif liste[j][1] < liste[pos][1]:
                 possib.remove(j)
 
-        # parcours des stratégies du joueur 2
+      # parcours des stratégies du joueur 2
         deb = tmp[0]*dim2
         fin = (tmp[0]+1)*dim2
         for j in range(deb, fin):
@@ -234,28 +181,36 @@ def nashPur(col, nbJ):
 def nashMixte(liste):
     equi = []
 
+'''' Test des fonctions  '''
 
-''' Test des fonctions '''
 
 test1 = [[1, -1, 1, 2, -3], [3, -3, 2, -4, 2], [2, -2, 3, -5, 2], [4, 4, -5, -5, 2], [5, 6, -7, -3, -1], [6, 3, -3, -3, -3],  [-1, -9, 5, 4, 1]]
 test2 = newListe(1, 3, [3, 2, 3], [-3, 3])
-test3 = [[1, -1],  [3, -3], [6, -2], [4, 4], [5, 6], [6, 3],  [1, 9], [2, 8], [1, 4]]
+test3 = [[1, -1], [3, -3], [6, -2],
+         [4,  4], [5,  6], [6,  3],
+         [1,  9], [2,  8], [1,  4]]
 
-#jeu = convert(test2, 6)
-GenPosStrat(test2, [3, 2, 3])
-print(posStrat)
+strat = [3, 3]
+var   = test3
+print(var)
 
-'''
-dom1, sdom1, dom2, sdom2 =domi(test3, 3, 3)
+GenPosStrat(var, strat)
+tt = domi(var, strat)
 print("Joueur 1:")
 print("dominée:")
-print(dom1)
+print(tt[0][1])
 print("Strictement dominée:")
-print(sdom1)
+print(tt[0][0])
 
-print("\n Joueur 2:")
+print("Joueur 2:")
 print("dominée:")
-print(dom2)
+print(tt[1][1])
 print("Strictement dominée:")
-print(sdom2)
+print(tt[1][0])
+'''
+print("Joueur 3:")
+print("dominée:")
+print(tt[2][1])
+print("Strictement dominée:")
+print(tt[2][0])
 '''
