@@ -224,6 +224,6 @@ def fen_tableau():
     bt.pack(pady=20)
 
 
-    canvas.config(width=(NB_COLONNE+1)*70, height=100)
+    canvas.config(width=(NB_COLONNE+1)*70, height=120)
 
     app.mainloop()
