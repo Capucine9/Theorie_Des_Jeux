@@ -49,14 +49,14 @@ def supp_strat():
     if nb_strat > nb_strat_min :
         # Retrecissement de la fenetre
         Fen_strat.height -=50
-        TAILLE = "340x" + str(Fen_strat.height)
+        TAILLE = "360x" + str(Fen_strat.height)
         Fen_strat.fenetre_strat.geometry(TAILLE)
 
         # Suppression d'une strategie
         nb_strat -= 1
         globals()["text_strat_" + str(nb_strat+1)].destroy()
-        Fen_strat.list_strat[Main.strat_joueur_nb-1][nb_strat].destroy()
-        del Fen_strat.list_strat[Main.strat_joueur_nb-1][-1]
+        Fen_strat.list_strat[Recup_valeur.strat_joueur_nb-1][nb_strat].destroy()
+        del Fen_strat.list_strat[Recup_valeur.strat_joueur_nb-1][-1]
 
     else :
         messagebox.showinfo("ATTENTION", "Le nombre de stratégie minimum par joueur a été atteint.")
