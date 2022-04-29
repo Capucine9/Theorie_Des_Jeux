@@ -4,6 +4,7 @@ from tkinter.ttk import *
 # Importation d'autres fichiers Python
 import Main
 import Fen_nom
+import Fen_result
 #import Bouton
 #import Nb_joueurs
 import Fen_strat
@@ -29,5 +30,9 @@ def changer_strat_tableau():
     
     Fen_strat.fenetre_strat.destroy()
     Fen_tableau.fen_tableau()
+    
+def changer_tableau_resultat():
+    Fen_tableau.app.destroy()
+    Fen_result.fen_resultat()
     
 

@@ -3,6 +3,8 @@ from tkinter.ttk import Separator, Style
 from string import ascii_lowercase
 import re  
 from tkinter import messagebox
+from fonctionalites import newListe
+import Changer_page
 
 
 # Importation d'autres fichiers Python
@@ -16,11 +18,12 @@ import Fen_strat
 
 # Default size  
 LARGEUR = 1500
-HAUTEUR = 700
+HAUTEUR = 500
 # Config the game
 
 # tableau des valeurs du tableau (remplis plus tard)
 VALEURS = []
+txt_popup = ""
 # Nom des joueurs et des strategies affiche dans le tableau (noms provisoires)
 tmp_j = []
 tmp_s = []
@@ -33,6 +36,11 @@ def fen_tableau():
     global JOUEURS
     global tmp_j
     global tmp_s
+    global txt_popup
+    global app
+    global inf
+    global sup
+    global valeur_null
 
     # Recuperation de donnees precedente
     NB_joueurs = Nb_joueur.nb_joueurs
@@ -50,7 +58,7 @@ def fen_tableau():
     NB_COLONNE = len(STRATS[len(STRATS)-1])     # NB_COLONNE = nombre de strat de la deniere case de STRATS
     for i in range(0, len(STRATS)-2):           # Les strats du joueur 1 ne sont pas prises en compte
         NB_COLONNE *= len(STRATS[len(STRATS)-i-2])
-    LARGEUR = NB_COLONNE * 70 # must be size of a cell of the tab, but 70 work well
+    LARGEUR = NB_COLONNE * 70 + 2000 # must be size of a cell of the tab, but 70 work well
     # avoid to go out of the screen or too small
     if LARGEUR > 1200:
         LARGEUR = 1200
@@ -63,8 +71,76 @@ def fen_tableau():
     app.geometry("{}x{}+{}+{}".format(LARGEUR, HAUTEUR, x_cordinate, y_cordinate))
 
 
+    titre = Label ( app, text = "Remplissage des strategies", font='Helvetica 13 bold underline')
+    titre.pack(pady = 50)
 
 
+
+    # ======================================================================================================
+    # BOUTTONS
+    
+    frame_bout = Frame(app)
+    frame_bout.pack(side=TOP, pady=(0,50))
+    def print_legend():
+        messagebox.showinfo("ATTENTION", txt_popup)
+                    
+    button = Button(frame_bout, text="Infos sur la legende du tableau", command=print_legend).grid(row = 0, column = 2, columnspan=2, padx=(0, 30))
+    
+    def put_val_aleatoire():
+        min = inf.get()
+        max = sup.get()
+        val = 1 if valeur_nul.get() else 0
+        print(min, max, val)
+        if min > max:
+            messagebox.showinfo("ATTENTION", "La valeur minimale de l'intervale de generation de valeurs aleatoires ne peut etre superieure a la valeur maximale de l'intervale.")
+            pass
+        
+        
+        s = []
+        for i in range(len(STRATS)):
+            s.append(len(STRATS[i]))
+        val = newListe(val, NB_joueurs, s, [min,max])
+        # pour chaque case remplissable du tableau
+        i = 0
+        for e in tableur.children:
+            v = tableur.children[e]
+            match = ['a', 'b', 'c', 'd', 'e']
+            # si la case n'est pas une case de label pour le tableau
+            # sinon elle contient forcement une lettre pour le nom des strategies
+            if not any(x in v.get() for x in match):
+                v.delete(0,"end")
+                txt = str(val[i][0])
+                for j in range(NB_joueurs-1):
+                    txt += "," + str(val[i][j+1])
+                v.insert(0, txt)
+                i += 1
+        
+    button = Button(frame_bout, text="Valeurs aleatoires", command=put_val_aleatoire).grid(row = 1, column = 5, padx=(0, 10))
+    
+    
+    
+    ## Bouton d'echelle
+    # Inferieur
+    lab = Label ( frame_bout, text = "Borne inferieure", font='Helvetica 11')
+    lab.grid(row = 1, column = 0, padx=(10, 5))
+    inf = IntVar()
+    echelle_inf = Scale(frame_bout, orient='horizontal', from_=-20, to=20, length=200, variable = inf).grid(row = 1, column = 1, padx=(0, 10))
+    
+    
+    # Superieur
+    lab = Label ( frame_bout, text = "Borne superieure", font='Helvetica 11')
+    lab.grid(row = 1, column = 2, padx=(10, 5))
+    sup = IntVar()
+    echelle_sup = Scale(frame_bout, orient='horizontal', from_=-20, to=20, length=200, variable = sup).grid(row = 1, column = 3, padx=(0, 10))
+    
+    
+    ## Bouton de saisie si les utilisateurs souhaitent choisir un jeu a somme nul
+    # valeur_nul egal à True si la case est cochee, False sinon
+    valeur_nul = BooleanVar ()
+    case_nul = Checkbutton (frame_bout, variable = valeur_nul)
+    case_nul.config (text = "Jeu a somme nulle")
+    case_nul.grid(row = 1, column = 4)
+    
 
 
 
@@ -74,29 +150,16 @@ def fen_tableau():
     # Nom temporaire des joueurs pour le tableau
     for i in range(0, NB_joueurs):
         text = str(i+1)
-        # ajout d'un padding au texte si le nom est le 1e ou le dernier de la liste
-        if i==0:
-            txt = Label ( app, text = "Soit \""+ text +"\" le joueur : \""+ JOUEURS[i]+"\"")
-            txt.pack(padx=0, pady=(10,0))
-        elif i == NB_joueurs-1:
-            txt = Label ( app, text = "Soit \""+ text +"\" le joueur : \""+ JOUEURS[i]+"\"")
-            txt.pack(padx=0, pady=(0,10))
-        else:
-            txt = Label ( app, text = "Soit \""+ text +"\" le joueur : \""+ JOUEURS[i]+"\"")
-            txt.pack()
+        txt_popup += "Soit \""+ text +"\" le joueur : \""+ JOUEURS[i]+"\"\n"
         tmp_j.append(text)
             
     # Nom temporaire des strategies pour le tableau
     for i in range(0, len(STRATS)):
+        txt_popup += "\n"
         tab = []
         for j in range(0 , len(STRATS[i])):
             txt_strat = str(i+1) + ascii_lowercase[j:j+1]
-            txt = Label ( app, text = "Soit \""+ txt_strat +"\" la strategie \"" + STRATS[i][j] + "\" du joueur \"" + JOUEURS[i] + "\"")
-            # ajout d'un padding au texte si la strategie est le 1e ou le dernier de la liste
-            if ( j == len(STRATS[i])-1 ):
-                txt.pack(padx=0, pady=(0,20))
-            else:
-                txt.pack(padx=0, pady=(0,0))
+            txt_popup += "Soit \""+ txt_strat +"\" la strategie \"" + STRATS[i][j] + "\" du joueur \"" + JOUEURS[i] + "\"\n"
             tab.append(txt_strat)
         tmp_s.append(tab)
 
@@ -208,17 +271,18 @@ def fen_tableau():
             # si la case n'est pas une case de label pour le tableau
             # sinon elle contient forcement une lettre pour le nom des strategies
             if not any(x in v.get() for x in match):
-                pattern = re.compile("^\d+(\,\d+)+$")
+                pattern = re.compile("^-?\d+(\,-?\d+)+$")
                 # si l'entree utilisateur n'est pas dans le format
                 # format : "nombre,nombre,nombre"
                 if not pattern.match(v.get()):
                     print("MAUVAIS FORMAT")
-                    messagebox.showinfo("ATTENTION", "Le format des entrees n'est pas le bon. Chaque entree doit etre un couple (sans mettre les parentheses) de n valeurs (n etant le nombre de joueurs).")
+                    messagebox.showinfo("ATTENTION", "Le format de l'entree \""+ v.get() +"\" n'est pas le bon. Chaque entree doit etre un couple (sans mettre les parentheses) de n valeurs (n etant le nombre de joueurs).")
                     VALEURS= []
                     break
                 else:
                     # TODO : supprimer les espaces apres le split
                     VALEURS.append(v.get().split(','))
+        Changer_page.changer_tableau_resultat()
 
     bt = Button(app, text='Valider (format des entrees : \"x,x,x\")', command=get_cells)
     bt.pack(pady=20)
