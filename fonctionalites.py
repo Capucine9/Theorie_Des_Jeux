@@ -1,10 +1,5 @@
 from random import randint
 
-''' Liste des variables globals '''
-
-# tableau des Stratégies du point de vue de chaque joueur
-posStrat = []
-
 ''' Liste des Fonctions de test '''
 # Génére un jeu nul(1) ou non(0) de nbJoueurs joueurs,
 # avec strat[i] stratégie pour le joueur i+1, et des valeurs compris dans l'intervale
@@ -37,6 +32,7 @@ def newListe(nul, nbJoueurs, strat, inter):
 
 # Donne un tableau comparant les nbStrats stratégies du joueurs n°numJ
 def GenPosStrat(liste, strat):
+    posStrat = []
     aux = 1
     n   = len(strat)
     for i in range(1, n):
@@ -63,13 +59,18 @@ def GenPosStrat(liste, strat):
                 i -= 1
         else:
            stratJ[n-1] = stratJ[n-1] + 1
+    res = []
+    for k in range(len(liste)):
+        val = [posStrat[k], liste[k]]
+        res.append(val)
+    return res
 
-# Obtenir les stratégie
+# Obtenir la stratégie strat du joueur J
 def getStrat(liste, J, strat):
     result = []
     for i in range(len(liste)):
-        if posStrat[i][J-1] == strat:
-            aux = [posStrat[i], liste[i]]
+        if liste[i][0][J] == strat:
+            aux = [liste[i][0], liste[i][1]]
             result.append(aux)
     return result
 
@@ -101,11 +102,10 @@ def domi(liste, strat):
             sdom = []
             Dom  = []
             sDom = []
-            tmp1 = getStrat(liste, i+1, s1+1)
-            print(s1)
+            tmp1 = getStrat(liste, i, s1+1)
             for s2 in range(strat[i]):
                 if s1 != s2:
-                     tmp2 = getStrat(liste, i+1, s2+1)
+                     tmp2 = getStrat(liste, i, s2+1)
                    # Variable déterminant si la stratégie est dominée ou Strictement dominée (1=oui, 0=indéterminer, -1=non)
                      d   = 0
                      sd  = 0
@@ -131,13 +131,13 @@ def domi(liste, strat):
                             sd = -1
                             sD = -1
 
-                     if sd >= 0:
+                     if sd > 0:
                         sdom.append(s2)
-                     if d >= 0:
+                     if d  > 0:
                         dom.append(s2)
-                     if sD >= 0:
+                     if sD > 0:
                         sDom.append(s2)
-                     if D >= 0:
+                     if D  > 0:
                         Dom.append(s2)
             jd.append(dom)
             jsd.append(sdom)
@@ -147,34 +147,46 @@ def domi(liste, strat):
         total.append(aux)
     return total
 
+def dans(liste, val):
+    for i in liste:
+        if i == val:
+            return True
+    return False
+
 # calcul des équilibres de Nash Purs
 def nashPur(liste, strat):
-    eNash  = []                                     # Liste des Équilibres de Nash Purs
-    pos    = 0                                      # Index dans la liste des stratégies possible
-
-  # Nombre de possibilité restante d'avoir un Équilibre de Nash Pure
-    possib = liste
+    eNash  = []                                   # Liste des Équilibres de Nash Purs
+    nbJ    = len(strat)
+    possib = list(liste)
+    actu   = liste[0]
+    sauv   = liste[0]
+    casu   = 0
+    j      = 0
 
     while len(possib) != 0:
-        J   = 0
+        aux = getStrat(liste, j, actu[0][j])
+        j   = (j+1)%len(strat)
+        for i in range(strat[j]):
+           if aux[i][1][j] > actu[1][j]:
+               if dans(possib, actu):
+                  possib.remove(actu)
+               actu = aux[i]
+           else:
+               if dans(possib, aux[i]):
+                  possib.remove(aux[i])
 
-        for j in range(deb, fin):
-            if liste[j][1] > liste[pos][1]:
-                possib.remove(pos)
-                pos = j
-            elif liste[j][1] < liste[pos][1]:
-                possib.remove(j)
-
-      # parcours des stratégies du joueur 2
-        deb = tmp[0]*dim2
-        fin = (tmp[0]+1)*dim2
-        for j in range(deb, fin):
-            if liste[j][1] > liste[pos][1]:
-                possib.remove(pos)
-                pos = j
-            elif liste[j][1] < liste[pos][1]:
-                possib.remove(j)
-        sauv = liste[coord[0]*dim2+coord[1]]
+        if actu == sauv:
+            casu += 1
+        else:
+            casu = 0
+            sauv = actu
+        if casu > nbJ:
+            eNash.append(actu)
+            if dans(possib, aux[i]):
+               possib.remove(actu)
+            if len(possib) != 0:
+               actu = possib[0]
+            casu = 0
     return eNash
 
 # calcul des équilibres de Nash Mixtes
@@ -184,29 +196,41 @@ def nashMixte(liste):
 '''' Test des fonctions  '''
 
 
-test1 = [[1, -1, 1, 2, -3], [3, -3, 2, -4, 2], [2, -2, 3, -5, 2], [4, 4, -5, -5, 2], [5, 6, -7, -3, -1], [6, 3, -3, -3, -3],  [-1, -9, 5, 4, 1]]
+test1 = [ [1, -1, 1, 2, -3], [3, -3, 2, -4, 2], [2, -2, 3, -5, 2], [4, 4, -5, -5, 2], [5, 6, -7, -3, -1], [6, 3, -3, -3, -3], [-1, -9, 5, 4, 1]]
 test2 = newListe(1, 3, [3, 2, 3], [-3, 3])
 test3 = [[1, -1], [3, -3], [6, -2],
          [4,  4], [5,  6], [6,  3],
          [1,  9], [2,  8], [1,  4]]
+test4 = [[-1, -1], [-5,  0],
+         [ 0, -5], [-3, -3]]
 
-strat = [3, 3]
-var   = test3
-print(var)
-
-GenPosStrat(var, strat)
-tt = domi(var, strat)
+strat = [2, 2]
+var   = test4
+aux = GenPosStrat(var, strat)
+print(aux)
+tt = domi(aux, strat)
 print("Joueur 1:")
 print("dominée:")
 print(tt[0][1])
 print("Strictement dominée:")
 print(tt[0][0])
+print("domine:")
+print(tt[0][3])
+print("Strictement domine:")
+print(tt[0][2])
 
 print("Joueur 2:")
 print("dominée:")
 print(tt[1][1])
 print("Strictement dominée:")
 print(tt[1][0])
+print("domine:")
+print(tt[0][3])
+print("Strictement domine:")
+print(tt[0][2])
+
+print("Équilibres:")
+print(nashPur(aux, strat))
 '''
 print("Joueur 3:")
 print("dominée:")
