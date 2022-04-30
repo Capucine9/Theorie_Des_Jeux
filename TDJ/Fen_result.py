@@ -32,7 +32,7 @@ def fen_resultat():
     
     
     # ======================================================================================================
-    # LABALS
+    # LABELS
     frame_bout = Frame(fenetre_resultat)
     frame_bout.pack(anchor=CENTER, pady=(50,50))
     
@@ -106,26 +106,28 @@ def fen_resultat():
             lab = Label ( frame_bout, text = "Rien", font='Helvetica 11')
             lab.grid(row=level_row, column=2, pady=(0,30))
             level_row += 1
-            
-    '''
-    print(strats_domi)
-    print("Joueur 1:")
-    print("dominée:")
-    print(strats_domi[0][1])
-    print("Strictement dominée:")
-    print(strats_domi[0][0])
+       
+       
+         
+    # EQUILIBRES DE NASH
+    equi = fonctionalites.nashPur(tab_trie, STRATS_INT)
+    lab = Label ( frame_bout, text = "Equilibre de nash : ", font='Helvetica 11 underline')
+    lab.grid(row=level_row, column=0, pady=(50,0))
+    level_row += 1
+    # pour chauqe equilibre
+    print("->",equi)
+    for i in range(len(equi)):
+        txt_list = '(' + str(equi[i][1][0])
+        for v in range(1, len(equi[i][1])):
+            txt_list += "," + str(equi[i][1][v])
+        txt_list += ')'
+        lab = Label ( frame_bout, text = "La strategie \"" + txt_list +"\" est un equilibre de nash", font='Helvetica 11')
+        if i == len(equi)-1:
+            lab.grid(row=level_row, column=1, pady=(0,30))
+        else:
+            lab.grid(row=level_row, column=1)
+            level_row += 1
     
-    print("Joueur 2:")
-    print("dominée:")
-    print(strats_domi[1][1])
-    print("Strictement dominée:")
-    print(strats_domi[1][0])
-    
-    print("Joueur 3:")
-    print("dominée:")
-    print(strats_domi[2][1])
-    print("Strictement dominée:")
-    print(strats_domi[2][0])'''
     
     
     
