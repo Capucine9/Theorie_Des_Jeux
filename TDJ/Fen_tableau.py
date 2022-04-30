@@ -41,6 +41,8 @@ def fen_tableau():
     global inf
     global sup
     global valeur_null
+    global VALEURS
+    VALEURS = []
 
     # Recuperation de donnees precedente
     NB_joueurs = Nb_joueur.nb_joueurs
@@ -90,7 +92,6 @@ def fen_tableau():
         min = inf.get()
         max = sup.get()
         val = 1 if valeur_nul.get() else 0
-        print(min, max, val)
         if min > max:
             messagebox.showinfo("ATTENTION", "La valeur minimale de l'intervale de generation de valeurs aleatoires ne peut etre superieure a la valeur maximale de l'intervale.")
             pass
@@ -135,7 +136,7 @@ def fen_tableau():
     
     
     ## Bouton de saisie si les utilisateurs souhaitent choisir un jeu a somme nul
-    # valeur_nul egal à True si la case est cochee, False sinon
+    # valeur_nul egal a True si la case est cochee, False sinon
     valeur_nul = BooleanVar ()
     case_nul = Checkbutton (frame_bout, variable = valeur_nul)
     case_nul.config (text = "Jeu a somme nulle")
@@ -264,6 +265,7 @@ def fen_tableau():
 
     def get_cells():
         global VALEURS
+        VALEURS = []
         # pour chaque case remplisable du tableau
         for e in tableur.children:
             v = tableur.children[e]
@@ -275,14 +277,17 @@ def fen_tableau():
                 # si l'entree utilisateur n'est pas dans le format
                 # format : "nombre,nombre,nombre"
                 if not pattern.match(v.get()):
-                    print("MAUVAIS FORMAT")
                     messagebox.showinfo("ATTENTION", "Le format de l'entree \""+ v.get() +"\" n'est pas le bon. Chaque entree doit etre un couple (sans mettre les parentheses) de n valeurs (n etant le nombre de joueurs).")
                     VALEURS= []
                     break
                 else:
                     # TODO : supprimer les espaces apres le split
-                    VALEURS.append(v.get().split(','))
-        Changer_page.changer_tableau_resultat()
+                    tmp = v.get().split(',')
+                    for i in range(len(tmp)):
+                        tmp[i] = int(tmp[i])
+                    VALEURS.append(tmp)
+        if len(VALEURS) != 0:
+            Changer_page.changer_tableau_resultat()
 
     bt = Button(app, text='Valider (format des entrees : \"x,x,x\")', command=get_cells)
     bt.pack(pady=20)

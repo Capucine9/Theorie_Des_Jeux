@@ -32,7 +32,9 @@ def changer_strat_tableau():
     Fen_tableau.fen_tableau()
     
 def changer_tableau_resultat():
-    Fen_tableau.app.destroy()
     Fen_result.fen_resultat()
+    
+def quitter_resultat():
+    Fen_result.fenetre_resultat.destroy()
     
 
