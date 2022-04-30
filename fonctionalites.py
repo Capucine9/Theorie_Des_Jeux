@@ -112,7 +112,7 @@ def domi(liste, strat):
                      D   = 0
                      sD  = 0
 
-                     for j in range(strat[i]):
+                     for j in range(len(tmp2)):
                         if tmp1[j][1][i] < tmp2[j][1][i]:
                                D  = -1
                                sD = -1
@@ -158,15 +158,16 @@ def nashPur(liste, strat):
     eNash  = []                                   # Liste des Équilibres de Nash Purs
     nbJ    = len(strat)
     possib = list(liste)
+    cmp    = len(liste)*nbJ
     actu   = liste[0]
     sauv   = liste[0]
     casu   = 0
     j      = 0
 
-    while len(possib) != 0:
+    while cmp >= 0:
         aux = getStrat(liste, j, actu[0][j])
         j   = (j+1)%len(strat)
-        for i in range(strat[j]):
+        for i in range(len(aux)):
            if aux[i][1][j] > actu[1][j]:
                if dans(possib, actu):
                   possib.remove(actu)
@@ -174,13 +175,13 @@ def nashPur(liste, strat):
            else:
                if dans(possib, aux[i]):
                   possib.remove(aux[i])
-
+           cmp -= 1
         if actu == sauv:
             casu += 1
         else:
             casu = 0
             sauv = actu
-        if casu > nbJ:
+        if casu >= nbJ:
             eNash.append(actu)
             if dans(possib, aux[i]):
                possib.remove(actu)
@@ -191,23 +192,48 @@ def nashPur(liste, strat):
 
 # calcul des équilibres de Nash Mixtes
 def nashMixte(liste):
-    equi = []
+    equi = [[],[]]
+    # 1q + 2q + 3(1-q) + 4(1-q)
+    q = (liste[2][1][0] + liste[3][1][0])/(liste[0][1][0]+ liste[1][1][0] - liste[2][1][0] - liste[3][1][0])
+    p = (liste[1][1][1] + liste[3][1][1])/(liste[0][1][1]+ liste[2][1][0] - liste[1][1][0] - liste[3][1][0])
+    if 1-q > q:
+        aux = [1, 1-q]
+    else:
+        aux = [0, q]
+    equi[0].append(aux[0])
+    equi[1].append(aux[1])
+    if 1-p > p:
+        aux = [1, 1-p]
+    else:
+        aux = [0, p]
+    equi[0].append(aux[0])
+    equi[1].append(aux[1])
+    return equi
 
 '''' Test des fonctions  '''
 
 
-test1 = [ [1, -1, 1, 2, -3], [3, -3, 2, -4, 2], [2, -2, 3, -5, 2], [4, 4, -5, -5, 2], [5, 6, -7, -3, -1], [6, 3, -3, -3, -3], [-1, -9, 5, 4, 1]]
+test1 = [[1, 2, 3], [4, 2, 3],
+         [4, 5, 6], [2, 9, 4],
+         [2, 3, 2], [4, 5, 6]]
+
 test2 = newListe(1, 3, [3, 2, 3], [-3, 3])
 test3 = [[1, -1], [3, -3], [6, -2],
-         [4,  4], [5,  6], [6,  3],
-         [1,  9], [2,  8], [1,  4]]
-test4 = [[-1, -1], [-5,  0],
+         [4,  4], [5,  6], [6,  3]]
+test4 = [[2, 1], [0, 0],
+         [0, 0], [1, 2]]
+
+test5 = [[-1, -1], [-5,  0],
          [ 0, -5], [-3, -3]]
 
-strat = [2, 2]
-var   = test4
+strat = [2, 3]
+var   = test3
 aux = GenPosStrat(var, strat)
 print(aux)
+
+print("Équilibres:")
+print(nashPur(aux, strat))
+'''
 tt = domi(aux, strat)
 print("Joueur 1:")
 print("dominée:")
@@ -229,9 +255,6 @@ print(tt[0][3])
 print("Strictement domine:")
 print(tt[0][2])
 
-print("Équilibres:")
-print(nashPur(aux, strat))
-'''
 print("Joueur 3:")
 print("dominée:")
 print(tt[2][1])
