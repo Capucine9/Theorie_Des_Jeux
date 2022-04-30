@@ -185,7 +185,7 @@ def nashPur(liste, strat):
         if casu >= nbJ:
             if not dans(eNash, actu):
                eNash.append(actu)
-            if dans(possib, aux[i]):
+            if dans(possib, actu):
                possib.remove(actu)
             if len(possib) != 0:
                actu = possib[0]
@@ -194,24 +194,55 @@ def nashPur(liste, strat):
     return eNash
 
 # calcul des équilibres de Nash Mixtes
-def nashMixte(liste):
-    equi = [[],[]]
+def calculNashMixte(liste):
+    equi = []
+    val  = []
     # 1q + 2q + 3(1-q) + 4(1-q)
-    q = (liste[2][1][0] + liste[3][1][0])/(liste[0][1][0]+ liste[1][1][0] - liste[2][1][0] - liste[3][1][0])
-    p = (liste[1][1][1] + liste[3][1][1])/(liste[0][1][1]+ liste[2][1][0] - liste[1][1][0] - liste[3][1][0])
-    if 1-q > q:
-        aux = [1, 1-q]
-    else:
-        aux = [0, q]
-    equi[0].append(aux[0])
-    equi[1].append(aux[1])
-    if 1-p > p:
-        aux = [1, 1-p]
-    else:
-        aux = [0, p]
-    equi[0].append(aux[0])
-    equi[1].append(aux[1])
+    for j in range(2):
+        tmpJ = []
+        for s in range(2):
+            aux = getStrat(liste, j, s+1)
+            tmpJ.append([aux[0][1][j], aux[1][1][j]])
+        val.append(tmpJ)
+    print("val: ", val)
+    div = []
+    for i in val:
+        print("i: ", i)
+        tmp = (i[0][0]-i[0][1]) - (i[1][0]-i[1][1])
+        print(tmp)
+        div.append(tmp)
+    print("div: ", div)
+    q   = (val[0][1][1] - val[0][0][1])/ div[0]
+    p   = (val[1][1][1] - val[1][0][1])/ div[1]
+
+    aux = [round(p, 4), round(1-p, 4)]
+    equi.append(aux)
+    aux = [round(q, 4), round(1-q, 4)]
+    equi.append(aux)
     return equi
+
+def nashMixte(liste, proba):
+    n     = 100
+    tmp   = calculNashMixte(liste)
+    seuil = tmp[1][0]
+    gain  = 0
+    for _ in range(n):
+        alea1 = randint(0, 100)
+        alea2 = randint(0, 100)
+        if alea1 > proba[0]*10:
+            aux = getStrat(liste, 0, 2)
+        else:
+            aux = getStrat(liste, 0, 1)
+
+        print(aux)
+        if alea2 > int(seuil*10):
+            gain += aux[1][1][1]
+        else:
+            gain += aux[0][1][1]
+        print(gain)
+
+    return gain/n
+
 
 '''' Test des fonctions  '''
 
@@ -229,12 +260,16 @@ test5 = [[-1, -1], [-5,  0],
          [ 0, -5], [-3, -3]]
 
 strat = [2, 2]
-var   = test5
+var   = test4
 aux = GenPosStrat(var, strat)
 print(aux)
 
-print("Équilibres:")
+print("Équilibre:")
 print(nashPur(aux, strat))
+
+print("Équilibre Mixte:")
+print(nashMixte(aux, [1/3, 2/3]))
+
 '''
 tt = domi(aux, strat)
 print("Joueur 1:")
