@@ -171,23 +171,26 @@ def nashPur(liste, strat):
            if aux[i][1][j] > actu[1][j]:
                if dans(possib, actu):
                   possib.remove(actu)
+                  cmp -= 1
                actu = aux[i]
            else:
                if dans(possib, aux[i]):
                   possib.remove(aux[i])
-           cmp -= 1
+                  cmp -= 1
         if actu == sauv:
             casu += 1
         else:
             casu = 0
             sauv = actu
         if casu >= nbJ:
-            eNash.append(actu)
+            if not dans(eNash, actu):
+               eNash.append(actu)
             if dans(possib, aux[i]):
                possib.remove(actu)
             if len(possib) != 0:
                actu = possib[0]
             casu = 0
+            cmp -= 1
     return eNash
 
 # calcul des équilibres de Nash Mixtes
@@ -222,12 +225,11 @@ test3 = [[1, -1], [3, -3], [6, -2],
          [4,  4], [5,  6], [6,  3]]
 test4 = [[2, 1], [0, 0],
          [0, 0], [1, 2]]
-
 test5 = [[-1, -1], [-5,  0],
          [ 0, -5], [-3, -3]]
 
-strat = [2, 3]
-var   = test3
+strat = [2, 2]
+var   = test5
 aux = GenPosStrat(var, strat)
 print(aux)
 
