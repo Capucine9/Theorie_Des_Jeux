@@ -15,7 +15,7 @@ def fen_resultat():
     
     fenetre_resultat = Tk()
     fenetre_resultat.title("Resultat")
-    fenetre_resultat.geometry("1200x1000")
+    fenetre_resultat.geometry("1200x900")
     
     JOUEURS = Recup_valeur.nom_joueur
     STRATS = Fen_strat.nom_strat
@@ -129,12 +129,43 @@ def fen_resultat():
             level_row += 1
     
     
+    # EQUILIBRES DE NASH MIXTE
+    if len(STRATS_INT) == 2 and STRATS_INT[0] == 2 and STRATS_INT[1] == 2:
+        lab = Label ( frame_bout, text = "Equilibre de nash mixte: ", font='Helvetica 11 underline')
+        lab.grid(row=level_row, column=0, pady=(50,0))
+        level_row += 1
+        
+        lab = Label ( frame_bout, text = "Probabilite que \"" + JOUEURS[0] +"\" joue la strategie \"" + STRATS[0][0] + "\" :", font='Helvetica 11')
+        lab.grid(row=level_row, column=0, pady=(20,0))
+        
+        Entry1 = Entry(frame_bout, width=20)
+        Entry1.grid(row=level_row, column=1, pady=(20,0))
+        level_row += 1
+        
+        lab = Label ( frame_bout, text = "Probabilite que \"" + JOUEURS[0] +"\" joue la strategie \"" + STRATS[0][1] + "\"", font='Helvetica 11')
+        lab.grid(row=level_row, column=0, pady=(20,0))        
+        
+        Entry2 = Entry(frame_bout, width=20)
+        Entry2.grid(row=level_row, column=1, pady=(20,0))
+        level_row += 1
+        
+        LabRes = Label ( frame_bout, text = "En attente...", font='Helvetica 11')
+        LabRes.grid(row=level_row, column=1, pady=(20,0))        
+        
+        def search_equi_mixte():
+            proba1 = float(Entry1.get())
+            proba2 = float(Entry2.get())
+            moy = fonctionalites.nashMixte(tab_trie, [proba1, proba2])
+            LabRes.config(text = "Utilite moyenne du joueur \"" + JOUEURS[0] +"\" : " + str(moy) +" (100 cas)")
+        but = Button(frame_bout, text='Chercher un equilibre mixte', command=search_equi_mixte)
+        but.grid(row=level_row, column=0, pady=(20,0))
+        level_row += 1
     
     
     # Bouton quitter
     def get_back():
         Changer_page.quitter_resultat()
-    bout_quit = Button(fenetre_resultat, text='Quitter', command=get_back)
+    bout_quit = Button(fenetre_resultat, text='Fermer les resultats', command=get_back)
     bout_quit.pack(side=BOTTOM, pady=20)
     
         
