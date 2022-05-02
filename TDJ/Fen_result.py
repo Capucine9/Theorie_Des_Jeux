@@ -1,4 +1,6 @@
 from tkinter import *
+
+# Importation d'autres fichiers Python
 import Changer_page
 import fonctionalites
 import Fen_tableau
@@ -6,11 +8,8 @@ import Fen_strat
 import Recup_valeur
 from TDJ.Fen_tableau import fen_tableau
 
-# Importation d'autres fichiers Python
-
-
 ############################################################################
-## Creation de la fenetre des resultats mathématiques
+## Creation de la fenetre des resultats mathematiques
 def fen_resultat():
     global fenetre_resultat
     fenetre_resultat = Tk()
@@ -32,7 +31,7 @@ def fen_resultat():
     
     
     # ======================================================================================================
-    # LABELS
+    ## Labels
     frame_bout = Frame(fenetre_resultat)
     frame_bout.pack(anchor=CENTER, pady=(30,30))
     
@@ -41,7 +40,7 @@ def fen_resultat():
     lab = Label ( frame_bout, text = fonctionalites.somNul(Fen_tableau.VALEURS), font='Helvetica 11')
     lab.grid(row=0, column=1)
     
-    # STRAT DOMINEE
+    ## Strategies dominees
     strats_domi = fonctionalites.domi(tab_trie, STRATS_INT)
     lab = Label ( frame_bout, text = "Strategies strictement dominees : ", font='Helvetica 11 underline')
     lab.grid(row=1, column=0, pady=(30,0))
@@ -53,14 +52,14 @@ def fen_resultat():
     # strats_domi[i][0][j] = strats dominant la strat j du joueurs i
     # strats_domi[i][0][j][x] = 1 strat dominant la strat j du joueurs i
     
-    # pour chaque joueur
+    ## Pour chaque joueur
     for i in range(len(strats_domi)):
         lab = Label ( frame_bout, text = JOUEURS[i] + " :", font='Helvetica 11')
         lab.grid(row=level_row, column=1, pady=(0,20))
         is_domi = False
-        # pour chaque strat du joueur i
+        # Pour chaque strat du joueur i
         for s in range(len(strats_domi[i][0])):
-            # si le joueur la strat s qui se fait dominer
+            # Si le joueur la strat s qui se fait dominer
             if len(strats_domi[i][0][s]) >= 1:
                 is_domi = True
                 dominance = "\"" + STRATS[i][strats_domi[i][0][s][0]]
@@ -78,19 +77,19 @@ def fen_resultat():
             level_row += 1
             
             
-    # STRAT STRICTEMENT DOMINEE
+    ## Strategies strictement dominees 
     lab = Label ( frame_bout, text = "Strategies dominees : ", font='Helvetica 11 underline')
     lab.grid(row=level_row, column=0, pady=(30,0))
     level_row += 1
     
-    # pour chaque joueur
+    # Pour chaque joueur
     for i in range(len(strats_domi)):
         lab = Label ( frame_bout, text = JOUEURS[i] + " :", font='Helvetica 11')
         lab.grid(row=level_row, column=1, pady=(0,20))
         is_domi = False
-        # pour chaque strat du joueur i
+        # Pour chaque strat du joueur i
         for s in range(len(strats_domi[i][1])):
-            # si le joueur la strat s qui se fait dominer
+            # Si le joueur la strat s qui se fait dominer
             if len(strats_domi[i][1][s]) >= 1:
                 is_domi = True
                 dominance = "\"" + STRATS[i][strats_domi[i][1][s][0]]
@@ -110,19 +109,19 @@ def fen_resultat():
             
     
     
-    # STRAT DOMINANTE
+    ## Strategies dominantes
     lab = Label ( frame_bout, text = "Strategies strictement dominante : ", font='Helvetica 11 underline')
     lab.grid(row=level_row, column=0, pady=(30,0))
     level_row += 1
     
-    # pour chaque joueur
+    # Pour chaque joueur
     for i in range(len(strats_domi)):
         lab = Label ( frame_bout, text = JOUEURS[i] + " :", font='Helvetica 11')
         lab.grid(row=level_row, column=1, pady=(0,20))
         is_domi = False
-        # pour chaque strat du joueur i
+        # Pour chaque strat du joueur i
         for s in range(len(strats_domi[i][2])):
-            # si le joueur la strat s qui se fait dominer
+            # Si le joueur la strat s qui se fait dominer
             if len(strats_domi[i][2][s]) >= 1:
                 is_domi = True
                 dominance = "\"" + STRATS[i][strats_domi[i][2][s][0]]
@@ -144,13 +143,13 @@ def fen_resultat():
        
        
          
-    # EQUILIBRES DE NASH
+    ## Equilibres de Nash
     equi = fonctionalites.nashPur(tab_trie, STRATS_INT)
     print("equi",equi)
     lab = Label ( frame_bout, text = "Equilibre de nash : ", font='Helvetica 11 underline')
     lab.grid(row=level_row, column=0, pady=(30,0))
     level_row += 1
-    # pour chauqe equilibre
+    # Pour chaque equilibre
     for i in range(len(equi)):
         txt_list = '(' + str(equi[i][1][0])
         for v in range(1, len(equi[i][1])):
@@ -171,7 +170,7 @@ def fen_resultat():
         lab.grid(row=level_row, column=1, pady=(0,20))
     
     
-    # EQUILIBRES DE NASH MIXTE
+    # Equilibres de Nash Mixte
     if len(STRATS_INT) == 2 and STRATS_INT[0] == 2 and STRATS_INT[1] == 2:
         lab = Label ( frame_bout, text = "Equilibre de nash mixte: ", font='Helvetica 11 underline')
         lab.grid(row=level_row, column=0, pady=(30,0))

@@ -4,27 +4,25 @@ from string import ascii_lowercase
 import re  
 from tkinter import messagebox
 from fonctionalites import newListe
-import Changer_page
-
 
 # Importation d'autres fichiers Python
 import Nb_joueur
 import Recup_valeur
 import Fen_strat
-
+import Changer_page
 
 # ======================================================================================================
 # Info general pour le programme
 
-# Default size  
+# Taille par defaut 
 LARGEUR = 1500
 HAUTEUR = 500
-# Config the game
+# Configuration du jeu
 
-# tableau des valeurs du tableau (remplis plus tard)
+# Tableau des valeurs du tableau (remplis plus tard)
 VALEURS = []
 txt_popup = ""
-# Nom des joueurs et des strategies affiche dans le tableau (noms provisoires)
+# Nom des joueurs et des strategies affiches dans le tableau (noms provisoires)
 tmp_j = []
 tmp_s = []
 
@@ -44,32 +42,32 @@ def fen_tableau():
     global VALEURS
     VALEURS = []
 
-    # Recuperation de donnees precedente
+    # Recuperation de donnees precedentes
     NB_joueurs = Nb_joueur.nb_joueurs
     JOUEURS = Recup_valeur.nom_joueur
     STRATS = Fen_strat.nom_strat
     
     # ======================================================================================================
-    # Config de la fenetre
+    # Configuration de la fenetre
     
-    # Create the windows
+    # Creation de la fenetre
     app = Tk()
     screen_width = app.winfo_screenwidth()
     screen_height = app.winfo_screenheight()
-    # Responsive size according the configuration of the game
+    # Taille variable en fonction de la configuration du jeu
     NB_COLONNE = len(STRATS[len(STRATS)-1])     # NB_COLONNE = nombre de strat de la deniere case de STRATS
     for i in range(0, len(STRATS)-2):           # Les strats du joueur 1 ne sont pas prises en compte
         NB_COLONNE *= len(STRATS[len(STRATS)-i-2])
-    LARGEUR = NB_COLONNE * 70 + 2000 # must be size of a cell of the tab, but 70 work well
-    # avoid to go out of the screen or too small
+    LARGEUR = NB_COLONNE * 70 + 2000 
+    # Limite d'ecran
     if LARGEUR > 1200:
         LARGEUR = 1200
     if LARGEUR < 600:
         LARGEUR = 600
-    # Coordinates of the upper left corner of the window to make the window appear in the center
+    # Coordonnees du coin supérieur gauche de la fenetre pour faire apparaitre la fenetre au centre
     x_cordinate = int((screen_width/2) - (LARGEUR/2))
     y_cordinate = int((screen_height/2) - (HAUTEUR/2))
-    # Set the size and the position of the windows
+    # Definie la taille et la position des fenetres
     app.geometry("{}x{}+{}+{}".format(LARGEUR, HAUTEUR, x_cordinate, y_cordinate))
 
 
@@ -79,7 +77,7 @@ def fen_tableau():
 
 
     # ======================================================================================================
-    # BOUTTONS
+    ## Bouttons
     
     frame_bout = Frame(app)
     frame_bout.pack(side=TOP, pady=(0,50))
@@ -101,13 +99,13 @@ def fen_tableau():
         for i in range(len(STRATS)):
             s.append(len(STRATS[i]))
         val = newListe(val, NB_joueurs, s, [min,max])
-        # pour chaque case remplissable du tableau
+        # Pour chaque case remplissable du tableau
         i = 0
         for e in tableur.children:
             v = tableur.children[e]
             match = ['a', 'b', 'c', 'd', 'e']
-            # si la case n'est pas une case de label pour le tableau
-            # sinon elle contient forcement une lettre pour le nom des strategies
+            # Si la case n'est pas une case de label pour le tableau
+            # Sinon elle contient forcement une lettre pour le nom des strategies
             if not any(x in v.get() for x in match):
                 v.delete(0,"end")
                 txt = str(val[i][0])
@@ -141,12 +139,10 @@ def fen_tableau():
     case_nul = Checkbutton (frame_bout, variable = valeur_nul)
     case_nul.config (text = "Jeu a somme nulle")
     case_nul.grid(row = 1, column = 4)
-    
-
 
 
     # ======================================================================================================
-    # LABEL pour la legende du tableau
+    # Label pour la legende du tableau
 
     # Nom temporaire des joueurs pour le tableau
     for i in range(0, NB_joueurs):
@@ -182,9 +178,9 @@ def fen_tableau():
         def __init__(self, master, rows, columns, width):
             super().__init__(master)
 
-            # retiens la strategie courante du dernier joueur
+            # Retiens la strategie courante du dernier joueur
             self.count = 0
-            # retiens la strategie courante des joueurs (le 1e n'ai pas pris en compte)
+            # Retiens la strategie courante des joueurs (le 1e n'ai pas pris en compte)
             self.indices = [0]*(NB_joueurs-1)
             
 
@@ -217,15 +213,15 @@ def fen_tableau():
         
         def incrementBuffer(self):
             isNext = 0
-            # increnmente le numero de strat du dernier joueur dans la variable 
-            # de comptage et dans le tableau
+            # Increnmente le numero de strat du dernier joueur dans la variable 
+            # De comptage et dans le tableau
             self.count += 1
             self.indices[len(self.indices)-1] += 1
             if self.count == len(STRATS[len(STRATS)-1]):
                 self.count = 0
             
-            # si le numero de strat pour un joueur a depasser son nombre de strat, alors
-            # le numero reviens a 0 et incrementation du numero de la strat du joueur precedent
+            # Si le numero de strat pour un joueur a depasser son nombre de strat, alors
+            # Le numero reviens a 0 et incrementation du numero de la strat du joueur precedent
             for i in range(1, NB_joueurs-1):
                 j = NB_joueurs-i-1 # -1 : car j -> 1:10, case -> 0:9 ET -1 car j2 = case 1 (j1 abs)
                 if self.indices[j] == len(STRATS[j+1]):
@@ -261,22 +257,22 @@ def fen_tableau():
 
 
     # ======================================================================================================
-    # Ajout d'un bouton de validation
+    ## Ajout d'un bouton de validation
 
     def get_cells():
         global VALEURS
         # VALEURS = []
-        # pour chaque case remplisable du tableau
+        # Pour chaque case remplisable du tableau
         
         for e in tableur.children:
             v = tableur.children[e]
             match = ['a', 'b', 'c', 'd', 'e']
-            # si la case n'est pas une case de label pour le tableau
-            # sinon elle contient forcement une lettre pour le nom des strategies
+            # Si la case n'est pas une case de label pour le tableau
+            # Sinon elle contient forcement une lettre pour le nom des strategies
             if not any(x in v.get() for x in match):
                 pattern = re.compile("^-?\d+(\,-?\d+)+$")
-                # si l'entree utilisateur n'est pas dans le format
-                # format : "nombre,nombre,nombre"
+                # Si l'entree utilisateur n'est pas dans le format
+                # Format : "nombre,nombre,nombre"
                 if not pattern.match(v.get()):
                     messagebox.showinfo("ATTENTION", "Le format de l'entree \""+ v.get() +"\" n'est pas le bon. Chaque entree doit etre un couple (sans mettre les parentheses) de n valeurs (n etant le nombre de joueurs).")
                     VALEURS= []

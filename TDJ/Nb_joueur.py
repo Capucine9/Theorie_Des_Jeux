@@ -3,10 +3,8 @@ from tkinter.ttk import *
 from tkinter import messagebox
 
 # Importation d'autres fichiers Python
-#import Main
 import Fen_nom
 import Bouton
-#import Changer_page
 
 ## Initialisation des variables
 # Nombre de joueurs

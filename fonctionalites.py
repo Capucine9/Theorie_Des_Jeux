@@ -1,7 +1,7 @@
 from random import randint
 
 ''' Liste des Fonctions de test '''
-# Génére un jeu nul(1) ou non(0) de nbJoueurs joueurs,
+## Génére un jeu nul(1) ou non(0) de nbJoueurs joueurs,
 # avec strat[i] stratégie pour le joueur i+1, et des valeurs compris dans l'intervale
 def newListe(nul, nbJoueurs, strat, inter):
     liste = []
@@ -30,7 +30,7 @@ def newListe(nul, nbJoueurs, strat, inter):
 
 ''' Liste des Fonctions utiles '''
 
-# Donne un tableau comparant les nbStrats stratégies du joueurs n°numJ
+## Donne un tableau comparant les nbStrats stratégies du joueurs n°numJ
 def GenPosStrat(liste, strat):
     posStrat = []
     aux = 1
@@ -65,7 +65,7 @@ def GenPosStrat(liste, strat):
         res.append(val)
     return res
 
-# Obtenir la stratégie strat du joueur J
+## Obtenir la stratégie strat du joueur J
 def getStrat(liste, J, strat):
     result = []
     for i in range(len(liste)):
@@ -75,7 +75,7 @@ def getStrat(liste, J, strat):
     return result
 
 
-# Détermine si le jeu est à somme Nulles
+## Détermine si le jeu est à somme Nulles
 def somNul(liste):
     for i in liste:
         somme = 0
@@ -85,7 +85,7 @@ def somNul(liste):
            return "Ce Jeu n'est pas un jeu à somme nulles"
     return "Ce Jeu est un jeu à somme nulles"
 
-# Déterminer les stratégies dominantes
+## Déterminer les stratégies dominantes
 def domi(liste, strat):
     nbJ  = len(strat)
     i    = 0
@@ -153,7 +153,7 @@ def dans(liste, val):
             return True
     return False
 
-# calcul des équilibres de Nash Purs
+## Calcul des équilibres de Nash Purs
 def nashPur(liste, strat):
     eNash  = []                                   # Liste des Équilibres de Nash Purs
     nbJ    = len(strat)
@@ -194,7 +194,7 @@ def nashPur(liste, strat):
             cmp -= 1
     return eNash
 
-# calcul des équilibres de Nash Mixtes
+## Calcul des équilibres de Nash Mixtes
 def calculNashMixte(liste):
     equi = []
     val  = []

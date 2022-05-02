@@ -3,7 +3,6 @@ from tkinter.ttk import *
 
 # Importation d'autres fichiers Python
 import Main
-#import Nb_joueur
 import Bouton
 import Changer_page
 

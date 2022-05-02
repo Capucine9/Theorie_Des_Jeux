@@ -21,7 +21,6 @@ def joueur():
     
     for i in range (len(Fen_nom.list_joueur)):
         nom_joueur.append(Fen_nom.list_joueur[i].get())
-    print ("nom_joueur", nom_joueur)
     
 ############################################################################
 def strat():
@@ -34,7 +33,6 @@ def strat():
             # Stock le nom des strategies dans des sous-listes independantes selon les joueurs a chaque fois que l'un d'eux a fini de les rentrer
             for i in range (len(Fen_strat.list_strat[strat_joueur_nb-1])):
                 Fen_strat.nom_strat[strat_joueur_nb-1].append(Fen_strat.list_strat[strat_joueur_nb-1][i].get())
-            print ("nom_strat", Fen_strat.nom_strat)
 
         if strat_joueur_nb < Nb_joueur.nb_joueurs :
             ## Augmente le numero du joueur dont on recupere les noms des strategies
@@ -55,7 +53,6 @@ def strat():
             # Recupere que les noms des strategies du premier joueur
             for i in range (len(Fen_strat.list_strat[0])):
                 Fen_strat.nom_strat[j].append(Fen_strat.list_strat[0][i].get())
-        print ("nom_strat", Fen_strat.nom_strat)
         Changer_page.changer_strat_tableau()
 
 

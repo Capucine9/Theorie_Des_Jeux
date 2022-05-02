@@ -5,8 +5,6 @@ from tkinter.ttk import *
 import Main
 import Fen_nom
 import Fen_result
-#import Bouton
-#import Nb_joueurs
 import Fen_strat
 import Recup_valeur
 import Fen_tableau
@@ -21,19 +19,21 @@ def changer_nom_strat():
     Fen_nom.fenetre_nom_joueur.destroy()
     Fen_strat.fen_strategie()
 
+## Permet de changer de page (saisie des strategies --> tableau de valeurs)
 def changer_strat_tableau():
     global nb_strategie
 
     for i in range (len(Fen_strat.list_strat)):
         nb_strategie.append(len(Fen_strat.nom_strat[i]))
-    print ("nb_strategie",nb_strategie)
     
     Fen_strat.fenetre_strat.destroy()
     Fen_tableau.fen_tableau()
-    
+
+## Permet de changer de page (tableau de valeurs --> resultat)
 def changer_tableau_resultat():
     Fen_result.fen_resultat()
-    
+
+## Permet de quitter la page de resultat
 def quitter_resultat():
     Fen_result.fenetre_resultat.destroy()
     

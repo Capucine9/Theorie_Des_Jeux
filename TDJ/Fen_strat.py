@@ -20,7 +20,7 @@ list_strat = []
 def len_list_strat():
     global nom_strat
     
-    ##Creer autant de sous-listes de strategies que de joueur
+    ## Creer autant de sous-listes de strategies que de joueur
     for i in range (Nb_joueur.nb_joueurs):
         list_strat.append([])
     nom_strat = copy.deepcopy(list_strat)
@@ -33,7 +33,7 @@ def fen_strategie():
     global list_strat
     global strat_joueur_nb
 
-    ##Creer les sous-listes de strategies
+    ## Creer les sous-listes de strategies
     if Recup_valeur.strat_joueur_nb == 1 :
         len_list_strat()
     
