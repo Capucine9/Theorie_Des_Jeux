@@ -265,8 +265,9 @@ def fen_tableau():
 
     def get_cells():
         global VALEURS
-        VALEURS = []
+        # VALEURS = []
         # pour chaque case remplisable du tableau
+        
         for e in tableur.children:
             v = tableur.children[e]
             match = ['a', 'b', 'c', 'd', 'e']
@@ -286,6 +287,13 @@ def fen_tableau():
                     for i in range(len(tmp)):
                         tmp[i] = int(tmp[i])
                     VALEURS.append(tmp)
+        """
+        VALEURS = [[0,0,0],[-1,-1,2],[1,1,-2],[-1,-1,2],[-1,2,-1],[-2,1,1],[0,0,0],[-2,2,0],[1,-2,1],[0,0,0],[2,-1,-1],[0,-2,2],
+               [2,-1,1],[1,-2,1],[0,0,0],[2,-2,0],[1,1,-2],[0,0,0],[-1,-1,2],[1,1,-2],[0,0,0],[-1,2,-1],[-2,1,1],[0,0,0],
+               [-2,1,1],[0,0,0],[-1,2,-1],[-1,-1,2],[0,0,0],[2,-1,-1],[1,-2,1],[0,0,0],[-1,-1,2],[1,1,-2],[0,0,0],[-1,-1,2]]"""
+        """VALEURS = [[0,0],[-1,1],[1,-1],[-1,1],
+                   [1,-1],[0,0],[-1,1],[1,-1],
+                   [-1,1],[1,-1],[0,0],[-1,1]]"""
         if len(VALEURS) != 0:
             Changer_page.changer_tableau_resultat()
 
@@ -294,5 +302,6 @@ def fen_tableau():
 
 
     canvas.config(width=(NB_COLONNE+1)*70, height=120)
-
+    
+    
     app.mainloop()
