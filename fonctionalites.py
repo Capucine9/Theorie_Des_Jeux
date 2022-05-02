@@ -209,8 +209,14 @@ def calculNashMixte(liste):
     for i in val:
         tmp = (i[0][0]-i[0][1]) - (i[1][0]-i[1][1])
         div.append(tmp)
-    q   = (val[0][1][1] - val[0][0][1])/ div[0]
-    p   = (val[1][1][1] - val[1][0][1])/ div[1]
+    if div[0] == 0:
+       q = 0
+    else:
+       q = (val[0][1][1] - val[0][0][1])/ div[0]
+    if div[1] == 0:
+        p = 0
+    else:
+       p   = (val[1][1][1] - val[1][0][1])/ div[1]
 
     aux = [round(p, 4), round(1-p, 4)]
     equi.append(aux)
@@ -237,60 +243,3 @@ def nashMixte(liste, proba):
             gain += aux[0][1][1]
 
     return gain/n
-
-
-'''' Test des fonctions '''
-
-
-test1 = [[1, 2, 3], [4, 2, 3],
-         [4, 5, 6], [2, 9, 4],
-         [2, 3, 2], [4, 5, 6]]
-
-test2 = newListe(1, 3, [3, 2, 3], [-3, 3])
-test3 = [[0,0],[-1,1],[1,-1],[-1,1],
-         [1,-1],[0,0],[-1,1],[1,-1],
-         [-1,1],[1,-1],[0,0],[-1,1]]
-test4 = [[2, 1], [0, 0],
-         [0, 0], [1, 2]]
-test5 = [[-1, -1], [-5,  0],
-         [ 0, -5], [-3, -3]]
-
-strat = [3, 4]
-var   = test3
-aux = GenPosStrat(var, strat)
-print(aux)
-
-print("Équilibre:")
-print(nashPur(aux, strat))
-
-'''
-print("Équilibre Mixte:")
-print(nashMixte(aux, [1/3, 2/3]))
-
-tt = domi(aux, strat)
-print("Joueur 1:")
-print("dominée:")
-print(tt[0][1])
-print("Strictement dominée:")
-print(tt[0][0])
-print("domine:")
-print(tt[0][3])
-print("Strictement domine:")
-print(tt[0][2])
-
-print("Joueur 2:")
-print("dominée:")
-print(tt[1][1])
-print("Strictement dominée:")
-print(tt[1][0])
-print("domine:")
-print(tt[0][3])
-print("Strictement domine:")
-print(tt[0][2])
-
-print("Joueur 3:")
-print("dominée:")
-print(tt[2][1])
-print("Strictement dominée:")
-print(tt[2][0])
-'''
