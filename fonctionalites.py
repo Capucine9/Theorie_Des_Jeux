@@ -158,7 +158,7 @@ def nashPur(liste, strat):
     eNash  = []                                   # Liste des Équilibres de Nash Purs
     nbJ    = len(strat)
     possib = list(liste)
-    cmp    = len(liste)*nbJ
+    cmp    = len(liste) + len(liste)*nbJ/2
     actu   = liste[0]
     sauv   = liste[0]
     casu   = 0
@@ -204,14 +204,10 @@ def calculNashMixte(liste):
             aux = getStrat(liste, j, s+1)
             tmpJ.append([aux[0][1][j], aux[1][1][j]])
         val.append(tmpJ)
-    print("val: ", val)
     div = []
     for i in val:
-        print("i: ", i)
         tmp = (i[0][0]-i[0][1]) - (i[1][0]-i[1][1])
-        print(tmp)
         div.append(tmp)
-    print("div: ", div)
     q   = (val[0][1][1] - val[0][0][1])/ div[0]
     p   = (val[1][1][1] - val[1][0][1])/ div[1]
 
@@ -234,17 +230,15 @@ def nashMixte(liste, proba):
         else:
             aux = getStrat(liste, 0, 1)
 
-        print(aux)
         if alea2 > int(seuil*10):
             gain += aux[1][1][1]
         else:
             gain += aux[0][1][1]
-        print(gain)
 
     return gain/n
 
 
-'''' Test des fonctions  '''
+'''' Test des fonctions '''
 
 
 test1 = [[1, 2, 3], [4, 2, 3],
@@ -267,10 +261,10 @@ print(aux)
 print("Équilibre:")
 print(nashPur(aux, strat))
 
+'''
 print("Équilibre Mixte:")
 print(nashMixte(aux, [1/3, 2/3]))
 
-'''
 tt = domi(aux, strat)
 print("Joueur 1:")
 print("dominée:")
