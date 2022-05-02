@@ -158,7 +158,8 @@ def nashPur(liste, strat):
     eNash  = []                                   # Liste des Équilibres de Nash Purs
     nbJ    = len(strat)
     possib = list(liste)
-    cmp    = len(liste) + len(liste)*nbJ/2
+    cmp    = len(liste)*nbJ
+
     actu   = liste[0]
     sauv   = liste[0]
     casu   = 0
@@ -171,12 +172,12 @@ def nashPur(liste, strat):
            if aux[i][1][j] > actu[1][j]:
                if dans(possib, actu):
                   possib.remove(actu)
-                  cmp -= 1
+               cmp -= 1
                actu = aux[i]
            else:
                if dans(possib, aux[i]):
                   possib.remove(aux[i])
-                  cmp -= 1
+               cmp -= 1
         if actu == sauv:
             casu += 1
         else:
@@ -246,15 +247,16 @@ test1 = [[1, 2, 3], [4, 2, 3],
          [2, 3, 2], [4, 5, 6]]
 
 test2 = newListe(1, 3, [3, 2, 3], [-3, 3])
-test3 = [[1, -1], [3, -3], [6, -2],
-         [4,  4], [5,  6], [6,  3]]
+test3 = [[0,0],[-1,1],[1,-1],[-1,1],
+         [1,-1],[0,0],[-1,1],[1,-1],
+         [-1,1],[1,-1],[0,0],[-1,1]]
 test4 = [[2, 1], [0, 0],
          [0, 0], [1, 2]]
 test5 = [[-1, -1], [-5,  0],
          [ 0, -5], [-3, -3]]
 
-strat = [2, 2]
-var   = test4
+strat = [3, 4]
+var   = test3
 aux = GenPosStrat(var, strat)
 print(aux)
 
